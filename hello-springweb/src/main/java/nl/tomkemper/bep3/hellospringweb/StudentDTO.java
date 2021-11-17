@@ -4,9 +4,14 @@ public class StudentDTO {
     private String student;
     private String slb;
 
-    public StudentDTO(String student, String slb) {
-        this.student = student;
-        this.slb = slb;
+    public StudentDTO() {
+    }
+
+    public StudentDTO(Student s) {
+        this.student = s.getName();
+        if (s.getSlber() != null) {
+            this.slb = s.getSlber().getName();
+        }
     }
 
     public String getStudent() {
