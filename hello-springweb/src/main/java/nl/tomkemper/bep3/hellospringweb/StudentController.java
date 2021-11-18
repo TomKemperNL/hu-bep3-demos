@@ -15,10 +15,12 @@ public class StudentController {
 
     private final KlasRepository klassen;
     private final SLBRepository slbers;
+    private final SLBAdviceGenerator advisor;
 
-    public StudentController(KlasRepository klassen, SLBRepository slbers) {
+    public StudentController(KlasRepository klassen, SLBRepository slbers, SLBAdviceGenerator advisor) {
         this.klassen = klassen;
         this.slbers = slbers;
+        this.advisor = advisor;
     }
 
     @GetMapping
@@ -33,6 +35,27 @@ public class StudentController {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("{student}/advice")
+    public StudentAdviceDTO getStudentAdvice(@PathVariable String klas, @PathVariable String student) {
+        Optional<Klas> savedKlas = this.klassen.findByName(klas);
+
+        if (savedKlas.isPresent()) {
+            Optional<Student> savedStudent = savedKlas.get().getStudents()
+                    .stream().filter(s -> s.getName().equalsIgnoreCase(student))
+                    .findAny();
+
+            if (savedStudent.isPresent() && savedStudent.get().getSlber() != null) {
+                return new StudentAdviceDTO(
+                        savedStudent.get(),
+                        this.advisor.giveAdvice(
+                                savedStudent.get().getSlber(),
+                                savedStudent.get()
+                        ));
+            }
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("{student}")
