@@ -23,114 +23,88 @@ public class StudentController {
         this.advisor = advisor;
     }
 
+
+    private Klas findKlas(String klas) {
+        Optional<Klas> savedKlas = this.klassen.findByName(klas);
+        if (savedKlas.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Klas not found");
+        }
+        return savedKlas.get();
+    }
+
+    private Student findStudent(String klas, String student) {
+        Klas savedKlas = findKlas(klas);
+        Optional<Student> savedStudent = savedKlas.getStudents()
+                .stream().filter(s -> s.getName().equalsIgnoreCase(student))
+                .findAny();
+
+        if (savedStudent.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found");
+        }
+        return savedStudent.get();
+    }
+
     @GetMapping
     public List<StudentDTO> getStudents(@PathVariable String klas) {
-        Optional<Klas> savedKlas = this.klassen.findByName(klas);
-
-        if (savedKlas.isPresent()) {
-            //N+1 problem example
-            return savedKlas.get().getStudents()
-                    .stream().map(StudentDTO::new)
-                    .collect(Collectors.toList());
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        Klas savedKlas = findKlas(klas);
+        //N+1 problem example
+        return savedKlas.getStudents()
+                .stream().map(StudentDTO::new)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("{student}/advice")
     public StudentAdviceDTO getStudentAdvice(@PathVariable String klas, @PathVariable String student) {
-        Optional<Klas> savedKlas = this.klassen.findByName(klas);
+        Student savedStudent = findStudent(klas, student);
 
-        if (savedKlas.isPresent()) {
-            Optional<Student> savedStudent = savedKlas.get().getStudents()
-                    .stream().filter(s -> s.getName().equalsIgnoreCase(student))
-                    .findAny();
-
-            if (savedStudent.isPresent() && savedStudent.get().getSlber() != null) {
-                return new StudentAdviceDTO(
-                        savedStudent.get(),
-                        this.advisor.giveAdvice(
-                                savedStudent.get().getSlber(),
-                                savedStudent.get()
-                        ));
-            }
+        if (savedStudent.getSlber() == null) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "SLBer not found");
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        return new StudentAdviceDTO(
+                savedStudent,
+                this.advisor.giveAdvice(savedStudent.getSlber(), savedStudent));
     }
 
     @GetMapping("{student}")
     public StudentDTO getStudent(@PathVariable String klas, @PathVariable String student) {
-        Optional<Klas> savedKlas = this.klassen.findByName(klas);
-
-        if (savedKlas.isPresent()) {
-            Optional<Student> savedStudent = savedKlas.get().getStudents()
-                    .stream().filter(s -> s.getName().equalsIgnoreCase(student))
-                    .findAny();
-
-            if (savedStudent.isPresent()) {
-                return new StudentDTO(savedStudent.get());
-            }
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        Student savedStudent = findStudent(klas, student);
+        return new StudentDTO(savedStudent);
     }
 
     @PutMapping("{student}")
     @Transactional
     public StudentDTO putStudent(@PathVariable String klas, @PathVariable String student, @RequestBody StudentDTO data) {
-        Optional<Klas> savedKlas = this.klassen.findByName(klas);
-
-        if (savedKlas.isPresent()) {
-            Optional<Student> savedStudent = savedKlas.get().getStudents()
-                    .stream().filter(s -> s.getName().equalsIgnoreCase(student))
-                    .findAny();
-
-            if (savedStudent.isPresent()) {
-                Optional<SLBer> slber = this.slbers.findByName(data.getSlb());
-                if (slber.isPresent()) {
-                    savedStudent.get().setSlber(slber.get());
-                    return new StudentDTO(savedStudent.get());
-                }
-            }
+        Student savedStudent = findStudent(klas, student);
+        Optional<SLBer> slber = this.slbers.findByName(data.getSlb());
+        if (slber.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SLBer not found");
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        savedStudent.setSlber(slber.get());
+        return new StudentDTO(savedStudent);
     }
 
     @DeleteMapping("{student}")
     @Transactional
     public void removeStudent(@PathVariable String klas, @PathVariable String student) {
-        Optional<Klas> savedKlas = this.klassen.findByName(klas);
-
-        if (savedKlas.isPresent()) {
-            Optional<Student> savedStudent = savedKlas.get().getStudents()
-                    .stream().filter(s -> s.getName().equalsIgnoreCase(student))
-                    .findAny();
-
-            if (savedStudent.isPresent()) {
-                savedKlas.get().remove(savedStudent.get());
-            }
-            return;
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        Klas savedKlas = findKlas(klas);
+        Student savedStudent = findStudent(klas, student);
+        savedKlas.remove(savedStudent);
     }
 
     @PostMapping
     @Transactional
     public StudentDTO addStudent(@PathVariable String klas, @RequestBody StudentDTO studentDTO) {
-        Optional<Klas> savedKlas = this.klassen.findByName(klas);
-
-        if (savedKlas.isPresent()) {
-            Student newStudent = new Student(studentDTO.getStudent());
-            if (studentDTO.getSlb() != null && !studentDTO.getSlb().isBlank()) {
-                Optional<SLBer> slBer = this.slbers.findByName(studentDTO.getSlb());
-                if (slBer.isEmpty()) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SLBer not found");
-                }
-                newStudent.setSlber(slBer.get());
+        Klas savedKlas = findKlas(klas);
+        Student newStudent = new Student(studentDTO.getStudent());
+        if (studentDTO.getSlb() != null && !studentDTO.getSlb().isBlank()) {
+            Optional<SLBer> slBer = this.slbers.findByName(studentDTO.getSlb());
+            if (slBer.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SLBer not found");
             }
-
-            savedKlas.get().add(newStudent);
-            return new StudentDTO(newStudent);
+            newStudent.setSlber(slBer.get());
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        savedKlas.add(newStudent);
+        return new StudentDTO(newStudent);
     }
 }
