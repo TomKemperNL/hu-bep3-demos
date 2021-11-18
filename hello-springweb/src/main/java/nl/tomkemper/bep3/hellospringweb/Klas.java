@@ -13,7 +13,8 @@ public class Klas {
     private long id;
 
     private String name;
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "klas_id")
     private List<Student> students;
 
     public Klas(String name) {
@@ -35,6 +36,10 @@ public class Klas {
 
     public void add(Student student) {
         this.students.add(student);
+    }
+
+    public void remove(Student student) {
+        this.students.remove(student);
     }
 
     public List<Student> getStudents() {

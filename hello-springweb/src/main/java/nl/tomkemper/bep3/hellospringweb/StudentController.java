@@ -33,8 +33,6 @@ public class StudentController {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-
-
     }
 
     @GetMapping("{student}")
@@ -74,4 +72,42 @@ public class StudentController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
+    @DeleteMapping("{student}")
+    @Transactional
+    public void removeStudent(@PathVariable String klas, @PathVariable String student) {
+        Optional<Klas> savedKlas = this.klassen.findByName(klas);
+
+        if (savedKlas.isPresent()) {
+            Optional<Student> savedStudent = savedKlas.get().getStudents()
+                    .stream().filter(s -> s.getName().equalsIgnoreCase(student))
+                    .findAny();
+
+            if (savedStudent.isPresent()) {
+                savedKlas.get().remove(savedStudent.get());
+            }
+            return;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping
+    @Transactional
+    public StudentDTO addStudent(@PathVariable String klas, @RequestBody StudentDTO studentDTO) {
+        Optional<Klas> savedKlas = this.klassen.findByName(klas);
+
+        if (savedKlas.isPresent()) {
+            Student newStudent = new Student(studentDTO.getStudent());
+            if (studentDTO.getSlb() != null && !studentDTO.getSlb().isBlank()) {
+                Optional<SLBer> slBer = this.slbers.findByName(studentDTO.getSlb());
+                if (slBer.isEmpty()) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SLBer not found");
+                }
+                newStudent.setSlber(slBer.get());
+            }
+
+            savedKlas.get().add(newStudent);
+            return new StudentDTO(newStudent);
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
 }
