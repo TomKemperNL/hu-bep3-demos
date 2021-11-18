@@ -13,19 +13,17 @@ import java.util.stream.Collectors;
 @RequestMapping("students/{klas}")
 public class StudentController {
 
-    private final KlasRepository klassen;
-    private final SLBRepository slbers;
+    private final CustomKlasRepository klassen;
     private final SLBAdviceGenerator advisor;
 
-    public StudentController(KlasRepository klassen, SLBRepository slbers, SLBAdviceGenerator advisor) {
+    public StudentController(CustomKlasRepository klassen, SLBAdviceGenerator advisor) {
         this.klassen = klassen;
-        this.slbers = slbers;
         this.advisor = advisor;
     }
 
 
     private Klas findKlas(String klas) {
-        Optional<Klas> savedKlas = this.klassen.findByName(klas);
+        Optional<Klas> savedKlas = this.klassen.find(klas);
         if (savedKlas.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Klas not found");
         }
@@ -75,7 +73,7 @@ public class StudentController {
     @Transactional
     public StudentDTO putStudent(@PathVariable String klas, @PathVariable String student, @RequestBody StudentDTO data) {
         Student savedStudent = findStudent(klas, student);
-        Optional<SLBer> slber = this.slbers.findByName(data.getSlb());
+        Optional<SLBer> slber = this.klassen.findSLBer(data.getSlb());
         if (slber.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SLBer not found");
         }
@@ -97,7 +95,7 @@ public class StudentController {
         Klas savedKlas = findKlas(klas);
         Student newStudent = new Student(studentDTO.getStudent());
         if (studentDTO.getSlb() != null && !studentDTO.getSlb().isBlank()) {
-            Optional<SLBer> slBer = this.slbers.findByName(studentDTO.getSlb());
+            Optional<SLBer> slBer = this.klassen.findSLBer(studentDTO.getSlb());
             if (slBer.isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "SLBer not found");
             }
