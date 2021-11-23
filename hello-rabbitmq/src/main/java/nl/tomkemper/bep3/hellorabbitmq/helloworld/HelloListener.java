@@ -3,6 +3,7 @@ package nl.tomkemper.bep3.hellorabbitmq.helloworld;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import nl.tomkemper.bep3.hellorabbitmq.LoggingConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -33,7 +34,7 @@ public class HelloListener implements CommandLineRunner {
             Channel channel = conn.createChannel();
 
             channel.queueDeclare("Hello2", true, false, false, new HashMap<>());
-            channel.basicConsume("Hello2", true, new SimpleConsumer());
+            channel.basicConsume("Hello2", true, new LoggingConsumer());
         } catch (TimeoutException | IOException e) {
             e.printStackTrace();
         }

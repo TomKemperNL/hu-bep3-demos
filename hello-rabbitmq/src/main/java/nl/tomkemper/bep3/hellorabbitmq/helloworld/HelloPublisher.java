@@ -16,7 +16,7 @@ import java.util.Scanner;
 import java.util.concurrent.TimeoutException;
 
 @Component
-@Order(1)
+@Order(13)
 public class HelloPublisher implements CommandLineRunner {
 
     private Logger logger = LoggerFactory.getLogger(HelloPublisher.class);

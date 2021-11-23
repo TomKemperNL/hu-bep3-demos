@@ -1,4 +1,4 @@
-package nl.tomkemper.bep3.hellorabbitmq.helloworld;
+package nl.tomkemper.bep3.hellorabbitmq;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Consumer;
@@ -10,10 +10,18 @@ import org.slf4j.LoggerFactory;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
-public class SimpleConsumer implements Consumer {
+public class LoggingConsumer implements Consumer {
 
-    private Logger logger = LoggerFactory.getLogger(SimpleConsumer.class);
 
+    private Logger logger;
+
+    public LoggingConsumer(){
+        logger = LoggerFactory.getLogger(LoggingConsumer.class);
+    }
+
+    public LoggingConsumer(String name){
+        logger = LoggerFactory.getLogger(name);
+    }
 
     @Override
     public void handleConsumeOk(String consumerTag) {
