@@ -1,4 +1,4 @@
-package nl.tomkemper.bep3.hellorabbitmq;
+package nl.tomkemper.bep3.hellorabbitmq.helloworld;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Consumer;
@@ -7,9 +7,7 @@ import com.rabbitmq.client.ShutdownSignalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class SimpleConsumer implements Consumer {

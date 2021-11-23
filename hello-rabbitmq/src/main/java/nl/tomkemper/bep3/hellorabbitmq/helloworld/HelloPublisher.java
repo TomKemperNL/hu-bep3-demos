@@ -1,4 +1,4 @@
-package nl.tomkemper.bep3.hellorabbitmq;
+package nl.tomkemper.bep3.hellorabbitmq.helloworld;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;

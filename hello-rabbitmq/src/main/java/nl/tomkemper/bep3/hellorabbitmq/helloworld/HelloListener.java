@@ -1,4 +1,4 @@
-package nl.tomkemper.bep3.hellorabbitmq;
+package nl.tomkemper.bep3.hellorabbitmq.helloworld;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -33,7 +33,7 @@ public class HelloListener implements CommandLineRunner {
             Channel channel = conn.createChannel();
 
             channel.queueDeclare("Hello2", true, false, false, new HashMap<>());
-            channel.basicConsume("Hello2", true, new nl.tomkemper.bep3.hellorabbitmq.SimpleConsumer());
+            channel.basicConsume("Hello2", true, new SimpleConsumer());
         } catch (TimeoutException | IOException e) {
             e.printStackTrace();
         }
