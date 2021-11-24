@@ -3,8 +3,14 @@ package nl.tomkemper.bep3.whutsupp;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -19,32 +25,33 @@ public class RabbitInit implements CommandLineRunner {
     private final boolean runTests = true;
     private final ConnectionFactory connectionFactory;
     private final ObjectMapper jsonSerializer;
+    private final RabbitAdmin admin;
+    private final RabbitTemplate template;
 
-    public RabbitInit(ConnectionFactory cf, ObjectMapper jsonSerializer) {
+    public RabbitInit(
+            RabbitAdmin admin, RabbitTemplate template, ConnectionFactory cf, ObjectMapper jsonSerializer) {
         this.connectionFactory = cf;
         this.jsonSerializer = jsonSerializer;
+        this.admin = admin;
+        this.template = template;
     }
 
     @Override
     public void run(String... args) throws Exception {
         System.out.println("Stekker zit erin");
-        try (Connection c = this.connectionFactory.createConnection()) {
-            try (Channel channel = c.createChannel(false)) {
-                channel.exchangeDeclare("whutsupp.pm", BuiltinExchangeType.DIRECT, true);
-                channel.exchangeDeclare("whutsupp.announce", BuiltinExchangeType.FANOUT, true);
-                channel.exchangeDeclare(INCOMING_EXCHANGE, BuiltinExchangeType.DIRECT, true);
-                channel.exchangeDeclare("whutsupp.outgoing", BuiltinExchangeType.DIRECT, true);
+        admin.declareExchange(new DirectExchange("whutsupp.pm"));
+        admin.declareExchange(new FanoutExchange("whutsupp.announce"));
+        admin.declareExchange(new DirectExchange(INCOMING_EXCHANGE));
+        admin.declareExchange(new DirectExchange("whutsupp.outgoing"));
 
-                channel.queueDeclare(INCOMING_QUEUE, true, false, false, null);
-                channel.queueBind(INCOMING_QUEUE, INCOMING_EXCHANGE, INCOMING_QUEUE);
+        admin.declareQueue(new Queue(INCOMING_QUEUE));
+        admin.declareBinding(new Binding(
+                INCOMING_QUEUE,
+                Binding.DestinationType.QUEUE,
+                INCOMING_EXCHANGE, INCOMING_QUEUE, null));
 
-                if (runTests) {
-                    byte[] bytes = this.jsonSerializer.writerFor(ChatMessage.class).writeValueAsBytes(new ChatMessage("Hello World"));
-                    channel.basicPublish(INCOMING_QUEUE,INCOMING_QUEUE, true, null, bytes);
-
-
-                }
-            }
+        if (runTests) {
+            this.template.convertAndSend(INCOMING_QUEUE, new ChatMessage("Hello World"));
         }
     }
 }
