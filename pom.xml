@@ -24,6 +24,7 @@
         <module>hello-rabbitmq</module>
         <module>hello-springweb</module>
         <module>hello-mongo</module>
+        <module>whutsupp</module>
     </modules>
 
     <dependencies>
