@@ -29,6 +29,7 @@ public class MongoInit implements CommandLineRunner {
             ));
 
             template.insert(docenten);
+            template.insert(new RemoteForwarding(3, new RemoteAMQPHost("localhost", 5672, null, null)));
         }
     }
 }

@@ -16,10 +16,12 @@ public class ChatController {
 
     private final KlasRepository klassen;
     private final RabbitTemplate rabbitTemplate;
+    private final RemoteForwardingRepository forwarders;
 
-    public ChatController(KlasRepository klassen, RabbitTemplate rabbitTemplate) {
+    public ChatController(KlasRepository klassen, RemoteForwardingRepository forwarders, RabbitTemplate rabbitTemplate) {
         this.klassen = klassen;
         this.rabbitTemplate = rabbitTemplate;
+        this.forwarders = forwarders;
     }
 
     @GetMapping("{studentnr}")
