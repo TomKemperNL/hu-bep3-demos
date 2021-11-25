@@ -34,4 +34,8 @@ public class ChatMessage {
     public String getContent() {
         return content;
     }
+
+    public ChatMessage butForReceiver(long receiverId) {
+        return new ChatMessage(this.content, receiverId, this.senderId);
+    }
 }
