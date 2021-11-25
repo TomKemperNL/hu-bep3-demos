@@ -1,9 +1,6 @@
 package nl.tomkemper.bep3.whutsupp;
 
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -28,7 +25,7 @@ public class MongoInit {
             ));
 
             template.insert(docenten);
-            template.insert(new RemoteForwarding(3, new RemoteAMQPHost("localhost", 5672, null, null)));
+            template.insert(new RemoteForwarding(3, new RemoteWhutsuppHost("localhost", 8080)));
         }
     }
 }

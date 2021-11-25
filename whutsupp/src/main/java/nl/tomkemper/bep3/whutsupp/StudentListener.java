@@ -2,10 +2,8 @@ package nl.tomkemper.bep3.whutsupp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.connection.PooledChannelConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -33,10 +31,18 @@ public class StudentListener {
             this.rabbitTemplate.convertAndSend(Student.getRoutingKey(this.student.getStudentNr()) + ".local", chatMessage);
         } else {
             System.out.println(String.format("We sturen 'm door naar %s", forwarder.get().getRemoteHost()));
-            ConnectionFactory cf = forwarder.get().getRemoteHost().createConnectionFactory();
-            RabbitTemplate rt = new RabbitTemplate(cf);
-            rt.setMessageConverter(new Jackson2JsonMessageConverter());
-            rt.convertAndSend(Whutsupp.INCOMING_QUEUE, chatMessage.butForReceiver(this.student.getStudentNr()));
+
+            RestTemplate rt = new RestTemplate();
+            String host = forwarder.get().getRemoteHost().getHostname();
+            int port = forwarder.get().getRemoteHost().getPort();
+
+            try {
+                String url = String.format("http://%s:%s/chat/%s", host, port, this.student.getStudentNr());
+                rt.postForLocation(url, chatMessage.butForReceiver(this.student.getStudentNr()));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                throw new RuntimeException(ex);
+            }
         }
     }
 }

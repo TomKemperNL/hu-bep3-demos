@@ -48,7 +48,7 @@ public class ChatController {
 
     @PostMapping()
     public void postAnnouncement(@RequestBody ChatMessage message) {
-        if (message.getContent() == null || message.getSenderId() == null || message.getContent().isBlank() || message.getReceiverId() != null) {
+        if (message.getContent() == null || message.getContent().isBlank() || message.getReceiverId() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
@@ -57,7 +57,7 @@ public class ChatController {
 
     @PostMapping("{studentnr}")
     public void postMessage(@RequestBody ChatMessage message, @PathVariable Long studentnr) {
-        if (message.getContent() == null || message.getSenderId() == null || message.getContent().isBlank()) {
+        if (message.getContent() == null || message.getContent().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
