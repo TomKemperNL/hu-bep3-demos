@@ -1,6 +1,7 @@
 package nl.tomkemper.bep3.whutsupp;
 
-import com.rabbitmq.client.ConnectionFactory;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.connection.PooledChannelConnectionFactory;
 
 public class RemoteAMQPHost {
     private String hostname;
@@ -24,7 +25,16 @@ public class RemoteAMQPHost {
         return port;
     }
 
-    public void sendMessage() {
-        ConnectionFactory cf = new ConnectionFactory();
+    public org.springframework.amqp.rabbit.connection.ConnectionFactory createConnectionFactory() {
+        com.rabbitmq.client.ConnectionFactory cf = new com.rabbitmq.client.ConnectionFactory();
+        cf.setHost(this.hostname);
+        cf.setPort(this.port);
+        if (this.user != null) {
+            cf.setUsername(this.user);
+        }
+        if (this.password != null) {
+            cf.setPassword(this.password);
+        }
+        return new CachingConnectionFactory(cf);
     }
 }

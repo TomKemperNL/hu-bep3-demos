@@ -3,6 +3,7 @@ package nl.tomkemper.bep3.whutsupp;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.MethodRabbitListenerEndpoint;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpoint;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
@@ -17,11 +18,13 @@ public class RabbitStudentListenerConfigurer implements RabbitListenerConfigurer
     private final RabbitAdmin admin;
     private final KlasRepository klassen;
     private final RemoteForwardingRepository forwarders;
+    private final RabbitTemplate rabbitTemplate;
 
-    public RabbitStudentListenerConfigurer(RabbitAdmin admin, KlasRepository klassen, RemoteForwardingRepository forwarders) {
+    public RabbitStudentListenerConfigurer(RabbitAdmin admin, RabbitTemplate rabbitTemplate, KlasRepository klassen, RemoteForwardingRepository forwarders) {
         this.admin = admin;
         this.klassen = klassen;
         this.forwarders = forwarders;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Override
@@ -49,8 +52,13 @@ public class RabbitStudentListenerConfigurer implements RabbitListenerConfigurer
             for (Student s : k.students()) {
                 String queueName = Student.getRoutingKey(s);
                 admin.declareQueue(new Queue(queueName));
+                admin.declareQueue(new Queue(queueName + ".local"));
                 admin.declareBinding(new Binding(
                         queueName,
+                        Binding.DestinationType.QUEUE,
+                        PM_EXCHANGE, queueName, null));
+                admin.declareBinding(new Binding(
+                        queueName + ".local",
                         Binding.DestinationType.QUEUE,
                         PM_EXCHANGE, queueName, null));
                 admin.declareBinding(new Binding(
@@ -59,7 +67,7 @@ public class RabbitStudentListenerConfigurer implements RabbitListenerConfigurer
                         ANNOUNCE_EXCHANGE, "fanout-" + queueName, null));
 
                 MethodRabbitListenerEndpoint endpoint = new MethodRabbitListenerEndpoint();
-                StudentListener listener = new StudentListener(s, forwarders);
+                StudentListener listener = new StudentListener(s, this.forwarders, this.rabbitTemplate);
                 endpoint.setId(queueName);
                 endpoint.setQueueNames(queueName);
                 endpoint.setBean(listener);

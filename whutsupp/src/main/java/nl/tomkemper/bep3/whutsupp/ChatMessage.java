@@ -23,6 +23,12 @@ public class ChatMessage {
         this.senderId = senderId;
     }
 
+    public ChatMessage(String content, long receiverId) {
+        this();
+        this.content = content;
+        this.receiverId = receiverId;
+    }
+
     public Long getSenderId() {
         return senderId;
     }
@@ -36,6 +42,11 @@ public class ChatMessage {
     }
 
     public ChatMessage butForReceiver(long receiverId) {
-        return new ChatMessage(this.content, receiverId, this.senderId);
+        if(this.senderId != null){
+            return new ChatMessage(this.content, receiverId, this.senderId);
+        }else{
+            return new ChatMessage(this.content, receiverId);
+        }
+
     }
 }

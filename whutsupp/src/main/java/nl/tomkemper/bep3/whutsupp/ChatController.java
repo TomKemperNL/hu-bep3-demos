@@ -18,12 +18,10 @@ public class ChatController {
 
     private final KlasRepository klassen;
     private final RabbitTemplate rabbitTemplate;
-    private final RemoteForwardingRepository forwarders;
 
-    public ChatController(KlasRepository klassen, RemoteForwardingRepository forwarders, RabbitTemplate rabbitTemplate) {
+    public ChatController(KlasRepository klassen, RabbitTemplate rabbitTemplate) {
         this.klassen = klassen;
         this.rabbitTemplate = rabbitTemplate;
-        this.forwarders = forwarders;
     }
 
     @GetMapping("{studentnr}")
@@ -39,22 +37,22 @@ public class ChatController {
 
         List<ChatMessage> newMessages = new ArrayList<>();
 
-        Object message = rabbitTemplate.receiveAndConvert(Student.getRoutingKey(student.get()));
+        Object message = rabbitTemplate.receiveAndConvert(Student.getRoutingKey(student.get()) + ".local");
         while (message != null) {
             newMessages.add((ChatMessage) message);
-            message = rabbitTemplate.receiveAndConvert(Student.getRoutingKey(student.get()));
+            message = rabbitTemplate.receiveAndConvert(Student.getRoutingKey(student.get()) + ".local");
         }
 
         return ResponseEntity.ok(newMessages);
     }
 
-    @PostMapping("all")
+    @PostMapping()
     public void postAnnouncement(@RequestBody ChatMessage message) {
-        if (message.getContent() == null || message.getSenderId() == null || message.getContent().isBlank()) {
+        if (message.getContent() == null || message.getSenderId() == null || message.getContent().isBlank() || message.getReceiverId() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        rabbitTemplate.convertAndSend(ANNOUNCE_EXCHANGE, "...", message);
+        rabbitTemplate.convertAndSend(INCOMING_EXCHANGE, "...", message);
     }
 
     @PostMapping("{studentnr}")
@@ -72,6 +70,6 @@ public class ChatController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        rabbitTemplate.convertAndSend(PM_EXCHANGE, Student.getRoutingKey(student.get()), message.butForReceiver(studentnr));
+        rabbitTemplate.convertAndSend(INCOMING_EXCHANGE, INCOMING_QUEUE, message.butForReceiver(studentnr));
     }
 }

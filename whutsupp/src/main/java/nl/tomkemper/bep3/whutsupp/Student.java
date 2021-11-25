@@ -21,6 +21,7 @@ public class Student {
     }
 
 
+
     public long getStudentNr() {
         return studentNr;
     }
@@ -48,4 +49,5 @@ public class Student {
     public static String getRoutingKey(long studentnr) {
         return String.format("%s.%s", PM_EXCHANGE, studentnr);
     }
+
 }
