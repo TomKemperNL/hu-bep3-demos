@@ -9,6 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import static nl.tomkemper.bep3.whutsupp.Whutsupp.*;
 
 @RestController
@@ -38,10 +39,10 @@ public class ChatController {
 
         List<ChatMessage> newMessages = new ArrayList<>();
 
-        Object message = rabbitTemplate.receiveAndConvert(student.get().getRoutingKey());
+        Object message = rabbitTemplate.receiveAndConvert(Student.getRoutingKey(student.get()));
         while (message != null) {
             newMessages.add((ChatMessage) message);
-            message = rabbitTemplate.receiveAndConvert(student.get().getRoutingKey());
+            message = rabbitTemplate.receiveAndConvert(Student.getRoutingKey(student.get()));
         }
 
         return ResponseEntity.ok(newMessages);
@@ -71,6 +72,6 @@ public class ChatController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        rabbitTemplate.convertAndSend(PM_EXCHANGE, student.get().getRoutingKey(), message.butForReceiver(studentnr));
+        rabbitTemplate.convertAndSend(PM_EXCHANGE, Student.getRoutingKey(student.get()), message.butForReceiver(studentnr));
     }
 }

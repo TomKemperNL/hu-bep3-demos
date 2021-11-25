@@ -41,7 +41,11 @@ public class Student {
         return email;
     }
 
-    public String getRoutingKey() {
-        return String.format("%s.%s", PM_EXCHANGE, this.getStudentNr()); //ongewenste koppeling...
+    public static String getRoutingKey(Student student) {
+        return getRoutingKey(student.getStudentNr());
+    }
+
+    public static String getRoutingKey(long studentnr) {
+        return String.format("%s.%s", PM_EXCHANGE, studentnr);
     }
 }

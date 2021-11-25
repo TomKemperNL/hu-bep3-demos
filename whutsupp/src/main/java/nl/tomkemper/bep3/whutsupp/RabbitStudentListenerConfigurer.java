@@ -1,25 +1,27 @@
 package nl.tomkemper.bep3.whutsupp;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.listener.MethodRabbitListenerEndpoint;
+import org.springframework.amqp.rabbit.listener.RabbitListenerEndpoint;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.handler.annotation.support.DefaultMessageHandlerMethodFactory;
+import org.springframework.messaging.handler.annotation.support.MessageHandlerMethodFactory;
+
 import static nl.tomkemper.bep3.whutsupp.Whutsupp.*;
 
 @Configuration
 public class RabbitStudentListenerConfigurer implements RabbitListenerConfigurer {
     private final RabbitAdmin admin;
     private final KlasRepository klassen;
+    private final RemoteForwardingRepository forwarders;
 
-
-
-    public RabbitStudentListenerConfigurer(RabbitAdmin admin, KlasRepository klassen) {
+    public RabbitStudentListenerConfigurer(RabbitAdmin admin, KlasRepository klassen, RemoteForwardingRepository forwarders) {
         this.admin = admin;
         this.klassen = klassen;
+        this.forwarders = forwarders;
     }
 
     @Override
@@ -45,7 +47,7 @@ public class RabbitStudentListenerConfigurer implements RabbitListenerConfigurer
 
         for (Klas k : this.klassen.findAll()) {
             for (Student s : k.students()) {
-                String queueName = s.getRoutingKey();
+                String queueName = Student.getRoutingKey(s);
                 admin.declareQueue(new Queue(queueName));
                 admin.declareBinding(new Binding(
                         queueName,
@@ -55,6 +57,19 @@ public class RabbitStudentListenerConfigurer implements RabbitListenerConfigurer
                         queueName,
                         Binding.DestinationType.QUEUE,
                         ANNOUNCE_EXCHANGE, "fanout-" + queueName, null));
+
+                MethodRabbitListenerEndpoint endpoint = new MethodRabbitListenerEndpoint();
+                StudentListener listener = new StudentListener(s, forwarders);
+                endpoint.setId(queueName);
+                endpoint.setQueueNames(queueName);
+                endpoint.setBean(listener);
+                endpoint.setMessageHandlerMethodFactory(new DefaultMessageHandlerMethodFactory()); //peak Java dit...
+                try {
+                    endpoint.setMethod(StudentListener.class.getMethod("processMessage", Message.class));
+                } catch (NoSuchMethodException e) {
+                    throw new RuntimeException(e);
+                }
+                registrar.registerEndpoint(endpoint);
             }
         }
     }
