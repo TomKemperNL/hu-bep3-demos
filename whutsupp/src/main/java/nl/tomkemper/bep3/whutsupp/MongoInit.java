@@ -7,18 +7,16 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
-@Order(1)
-public class MongoInit implements CommandLineRunner {
+public class MongoInit {
     private final MongoTemplate template;
 
     public MongoInit(MongoTemplate template) {
         this.template = template;
     }
 
-    @Override
     public void run(String... args) throws Exception {
         if (Whutsupp.TEST_DATA) {
+
             template.dropCollection(Klas.class);
             template.dropCollection(RemoteForwarding.class);
 
