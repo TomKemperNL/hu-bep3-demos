@@ -72,6 +72,8 @@ public class RabbitInit implements CommandLineRunner {
 
         if (Whutsupp.TEST_DATA) {
             this.template.convertAndSend(INCOMING_QUEUE, new ChatMessage("Hello World"));
+
+            this.template.convertAndSend(ANNOUNCE_EXCHANGE, "asdf", new ChatMessage("Hallo allemaal"));
         }
     }
 }

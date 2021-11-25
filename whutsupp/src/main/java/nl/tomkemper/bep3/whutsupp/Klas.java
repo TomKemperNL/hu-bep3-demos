@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class Klas {
     @Id
@@ -25,5 +26,9 @@ public class Klas {
     public Klas(String naam) {
         this.name = naam;
         this.students = new ArrayList<>();
+    }
+
+    public Optional<Student> findStudent(long studentnr) {
+        return this.students.stream().filter(s -> s.getStudentNr() == studentnr).findFirst();
     }
 }
