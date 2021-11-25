@@ -20,6 +20,7 @@ public class MongoInit implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (Whutsupp.TEST_DATA) {
             template.dropCollection(Klas.class);
+            template.dropCollection(RemoteForwarding.class);
 
             Klas docenten = new Klas("Docenten");
             docenten.students().addAll(List.of(

@@ -43,32 +43,7 @@ public class RabbitInit implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("Stekker zit erin");
-        admin.declareExchange(new DirectExchange(PM_EXCHANGE));
-        admin.declareExchange(new FanoutExchange(ANNOUNCE_EXCHANGE));
-        admin.declareExchange(new DirectExchange(INCOMING_EXCHANGE));
-        admin.declareExchange(new DirectExchange(OUTGOING_EXCHANGE));
 
-        admin.declareQueue(new Queue(INCOMING_QUEUE));
-        admin.declareBinding(new Binding(
-                INCOMING_QUEUE,
-                Binding.DestinationType.QUEUE,
-                INCOMING_EXCHANGE, INCOMING_QUEUE, null));
-
-        for (Klas k : this.klassen.findAll()) {
-            for (Student s : k.students()) {
-                String queueName = s.getRoutingKey();
-                admin.declareQueue(new Queue(queueName));
-                admin.declareBinding(new Binding(
-                        queueName,
-                        Binding.DestinationType.QUEUE,
-                        PM_EXCHANGE, queueName, null));
-                admin.declareBinding(new Binding(
-                        queueName,
-                        Binding.DestinationType.QUEUE,
-                        ANNOUNCE_EXCHANGE, "fanout-" + queueName, null));
-            }
-        }
 
         if (Whutsupp.TEST_DATA) {
             this.template.convertAndSend(INCOMING_QUEUE, new ChatMessage("Hello World"));
