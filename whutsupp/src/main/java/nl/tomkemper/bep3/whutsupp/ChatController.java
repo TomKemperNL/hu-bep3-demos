@@ -9,6 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import static nl.tomkemper.bep3.whutsupp.Whutsupp.*;
 
 @RestController
 @RequestMapping("/chat")
@@ -52,7 +53,7 @@ public class ChatController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        rabbitTemplate.convertAndSend(RabbitInit.ANNOUNCE_EXCHANGE, "...", message);
+        rabbitTemplate.convertAndSend(ANNOUNCE_EXCHANGE, "...", message);
     }
 
     @PostMapping("{studentnr}")
@@ -70,6 +71,6 @@ public class ChatController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        rabbitTemplate.convertAndSend(RabbitInit.PM_EXCHANGE, student.get().getRoutingKey(), message.butForReceiver(studentnr));
+        rabbitTemplate.convertAndSend(PM_EXCHANGE, student.get().getRoutingKey(), message.butForReceiver(studentnr));
     }
 }

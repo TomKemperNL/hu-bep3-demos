@@ -1,6 +1,7 @@
 package nl.tomkemper.bep3.whutsupp;
 
 import org.springframework.data.annotation.Id;
+import static nl.tomkemper.bep3.whutsupp.Whutsupp.*;
 
 public class Student {
 
@@ -41,6 +42,6 @@ public class Student {
     }
 
     public String getRoutingKey() {
-        return String.format("%s.%s", RabbitInit.PM_EXCHANGE, this.getStudentNr()); //ongewenste koppeling...
+        return String.format("%s.%s", PM_EXCHANGE, this.getStudentNr()); //ongewenste koppeling...
     }
 }

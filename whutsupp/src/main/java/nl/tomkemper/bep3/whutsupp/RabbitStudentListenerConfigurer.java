@@ -8,20 +8,14 @@ import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
 import org.springframework.context.annotation.Configuration;
+import static nl.tomkemper.bep3.whutsupp.Whutsupp.*;
 
 @Configuration
 public class RabbitStudentListenerConfigurer implements RabbitListenerConfigurer {
     private final RabbitAdmin admin;
     private final KlasRepository klassen;
 
-    public static final String INCOMING_EXCHANGE = "whutsupp.incoming";
-    public static final String INCOMING_QUEUE = INCOMING_EXCHANGE;
 
-    public static final String OUTGOING_EXCHANGE = "whutsupp.outgoing";
-    public static final String OUTGOING_QUEUE = OUTGOING_EXCHANGE;
-
-    public static final String PM_EXCHANGE = "whutsupp.pm";
-    public static final String ANNOUNCE_EXCHANGE = "whutsupp.announce";
 
     public RabbitStudentListenerConfigurer(RabbitAdmin admin, KlasRepository klassen) {
         this.admin = admin;
