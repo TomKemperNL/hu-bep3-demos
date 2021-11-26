@@ -1,6 +1,7 @@
 package nl.tomkemper.bep3.whutsupp;
 
 import org.springframework.data.annotation.Id;
+
 import static nl.tomkemper.bep3.whutsupp.Whutsupp.*;
 
 public class Student {
@@ -12,6 +13,9 @@ public class Student {
     private String surname;
     private String email;
 
+    protected Student() {
+    }
+
     public Student(long studentNr, String givenName, String prefix, String surname, String email) {
         this.studentNr = studentNr;
         this.givenName = givenName;
@@ -20,6 +24,9 @@ public class Student {
         this.email = email;
     }
 
+    public Student(long studentNr, String givenName, String surname, String email) {
+        this(studentNr, givenName, "", surname, email);
+    }
 
 
     public long getStudentNr() {
