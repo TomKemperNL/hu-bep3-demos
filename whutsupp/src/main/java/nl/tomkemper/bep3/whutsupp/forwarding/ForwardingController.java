@@ -43,14 +43,13 @@ public class ForwardingController {
     @Transactional
     public ResponseEntity<ForwardingDTO> updateConfig(@PathVariable long studentnr, @RequestBody ForwardingDTO dto) {
         dto.studentNr = studentnr; //url is leading...
-
         Optional<RemoteForwarding> forwarding = this.repo.findById(studentnr);
         if (forwarding.isEmpty()) {
             forwarding = Optional.of(dto.toNewForwarding());
-            this.repo.save(forwarding.get());
         }
 
         forwarding.get().update(dto);
+        this.repo.save(forwarding.get());
 
         return ResponseEntity.ok(new ForwardingDTO(forwarding.get()));
     }

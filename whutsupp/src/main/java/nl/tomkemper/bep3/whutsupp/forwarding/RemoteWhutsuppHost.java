@@ -56,6 +56,13 @@ public class RemoteWhutsuppHost {
         this.protocol = parseProtocol(dto.protocol);
     }
 
+    public org.springframework.amqp.rabbit.connection.ConnectionFactory createConnectionFactory() {
+        com.rabbitmq.client.ConnectionFactory cf = new com.rabbitmq.client.ConnectionFactory();
+        cf.setHost(this.hostname);
+        cf.setPort(this.port);
+        return new CachingConnectionFactory(cf);
+    }
+
     @Override
     public String toString() {
         return "RemoteWhutsuppHost{" +

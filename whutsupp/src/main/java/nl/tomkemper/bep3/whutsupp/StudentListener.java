@@ -34,17 +34,7 @@ public class StudentListener {
         } else {
             System.out.println(String.format("We sturen 'm door naar %s", forwarder.get().getRemoteHost()));
 
-            RestTemplate rt = new RestTemplate();
-            String host = forwarder.get().getRemoteHost().getHostname();
-            int port = forwarder.get().getRemoteHost().getPort();
-
-            try {
-                String url = String.format("http://%s:%s/chat/%s", host, port, this.student.getStudentNr());
-                rt.postForLocation(url, chatMessage.butForReceiver(this.student.getStudentNr()));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                throw new RuntimeException(ex);
-            }
+            forwarder.get().forward(this.student, chatMessage);
         }
     }
 }
