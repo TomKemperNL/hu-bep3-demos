@@ -4,12 +4,23 @@ import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.PooledChannelConnectionFactory;
 
 public class RemoteWhutsuppHost {
-    private String hostname;
-    private int port;
 
-    public RemoteWhutsuppHost(String hostname, int port) {
+    public enum Protocol {
+        AMQP, HTTP
+    }
+
+    private final String hostname;
+    private final int port;
+    private final Protocol protocol;
+
+    public RemoteWhutsuppHost(String hostname, int port, Protocol protocol) {
         this.hostname = hostname;
         this.port = port;
+        this.protocol = protocol;
+    }
+
+    public RemoteWhutsuppHost(String hostname, int port) {
+        this(hostname, port, Protocol.HTTP);
     }
 
     public String getHostname() {
@@ -19,4 +30,9 @@ public class RemoteWhutsuppHost {
     public int getPort() {
         return port;
     }
+
+    public Protocol getProtocol() {
+        return protocol;
+    }
+
 }
