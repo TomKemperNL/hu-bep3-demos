@@ -5,13 +5,16 @@ import org.springframework.amqp.rabbit.connection.PooledChannelConnectionFactory
 
 public class RemoteWhutsuppHost {
 
+
     public enum Protocol {
         AMQP, HTTP
     }
 
-    private final String hostname;
-    private final int port;
-    private final Protocol protocol;
+    private String hostname;
+    private int port;
+    private Protocol protocol;
+
+    protected RemoteWhutsuppHost(){}
 
     public RemoteWhutsuppHost(String hostname, int port, Protocol protocol) {
         this.hostname = hostname;
@@ -35,4 +38,30 @@ public class RemoteWhutsuppHost {
         return protocol;
     }
 
+    public static Protocol parseProtocol(String rawValue){
+        Protocol result;
+        if (rawValue.equalsIgnoreCase("HTTP")) {
+            result = Protocol.HTTP;
+        } else if (rawValue.equalsIgnoreCase("AMQP") || rawValue.equalsIgnoreCase("AQMP")) {
+            result = Protocol.AMQP;
+        }else{
+            throw new IllegalArgumentException(rawValue);
+        }
+        return result;
+    }
+
+    public void update(ForwardingDTO dto) {
+        this.hostname = dto.hostname;
+        this.port = dto.port;
+        this.protocol = parseProtocol(dto.protocol);
+    }
+
+    @Override
+    public String toString() {
+        return "RemoteWhutsuppHost{" +
+                "hostname='" + hostname + '\'' +
+                ", port=" + port +
+                ", protocol=" + protocol +
+                '}';
+    }
 }

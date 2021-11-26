@@ -30,7 +30,7 @@ public class MongoInit {
             ));
 
             template.insert(docenten);
-            template.insert(new RemoteForwarding(3, new RemoteWhutsuppHost("localhost", 8080)));
+            //template.insert(new RemoteForwarding(3, new RemoteWhutsuppHost("localhost", 8080)));
         }
     }
 }

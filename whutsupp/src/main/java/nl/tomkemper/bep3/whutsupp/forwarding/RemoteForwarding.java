@@ -19,4 +19,16 @@ public class RemoteForwarding {
     public RemoteWhutsuppHost getRemoteHost() {
         return remoteHost;
     }
+
+    public void update(ForwardingDTO dto) {
+        this.remoteHost.update(dto);
+    }
+
+    @Override
+    public String toString() {
+        return "RemoteForwarding{" +
+                "studentNr=" + studentNr +
+                ", remoteHost=" + remoteHost +
+                '}';
+    }
 }
