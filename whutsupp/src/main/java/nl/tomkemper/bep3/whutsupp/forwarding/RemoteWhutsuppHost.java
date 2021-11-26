@@ -1,4 +1,4 @@
-package nl.tomkemper.bep3.whutsupp;
+package nl.tomkemper.bep3.whutsupp.forwarding;
 
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.PooledChannelConnectionFactory;

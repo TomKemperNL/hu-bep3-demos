@@ -1,6 +1,8 @@
 package nl.tomkemper.bep3.whutsupp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nl.tomkemper.bep3.whutsupp.forwarding.RemoteForwarding;
+import nl.tomkemper.bep3.whutsupp.forwarding.RemoteForwardingRepository;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.client.RestTemplate;

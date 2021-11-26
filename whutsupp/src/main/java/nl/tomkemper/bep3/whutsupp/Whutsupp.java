@@ -2,6 +2,7 @@ package nl.tomkemper.bep3.whutsupp;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import nl.tomkemper.bep3.whutsupp.startup.MongoInit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.core.MongoTemplate;

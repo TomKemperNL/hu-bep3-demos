@@ -1,4 +1,4 @@
-package nl.tomkemper.bep3.whutsupp;
+package nl.tomkemper.bep3.whutsupp.startup;
 
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;

@@ -1,8 +1,11 @@
-package nl.tomkemper.bep3.whutsupp;
+package nl.tomkemper.bep3.whutsupp.startup;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;
+import nl.tomkemper.bep3.whutsupp.ChatMessage;
+import nl.tomkemper.bep3.whutsupp.KlasRepository;
+import nl.tomkemper.bep3.whutsupp.Whutsupp;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.FanoutExchange;

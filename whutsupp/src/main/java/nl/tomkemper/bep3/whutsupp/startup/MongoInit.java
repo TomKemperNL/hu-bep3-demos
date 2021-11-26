@@ -1,5 +1,10 @@
-package nl.tomkemper.bep3.whutsupp;
+package nl.tomkemper.bep3.whutsupp.startup;
 
+import nl.tomkemper.bep3.whutsupp.Klas;
+import nl.tomkemper.bep3.whutsupp.Student;
+import nl.tomkemper.bep3.whutsupp.Whutsupp;
+import nl.tomkemper.bep3.whutsupp.forwarding.RemoteForwarding;
+import nl.tomkemper.bep3.whutsupp.forwarding.RemoteWhutsuppHost;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.List;

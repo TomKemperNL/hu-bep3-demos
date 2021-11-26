@@ -1,5 +1,7 @@
-package nl.tomkemper.bep3.whutsupp;
+package nl.tomkemper.bep3.whutsupp.forwarding;
 
+import nl.tomkemper.bep3.whutsupp.ChatMessage;
+import nl.tomkemper.bep3.whutsupp.KlasRepository;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 import static nl.tomkemper.bep3.whutsupp.Whutsupp.*;

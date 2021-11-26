@@ -1,15 +1,18 @@
-package nl.tomkemper.bep3.whutsupp;
+package nl.tomkemper.bep3.whutsupp.startup;
 
+import nl.tomkemper.bep3.whutsupp.Klas;
+import nl.tomkemper.bep3.whutsupp.KlasRepository;
+import nl.tomkemper.bep3.whutsupp.Student;
+import nl.tomkemper.bep3.whutsupp.StudentListener;
+import nl.tomkemper.bep3.whutsupp.forwarding.RemoteForwardingRepository;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.MethodRabbitListenerEndpoint;
-import org.springframework.amqp.rabbit.listener.RabbitListenerEndpoint;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.handler.annotation.support.DefaultMessageHandlerMethodFactory;
-import org.springframework.messaging.handler.annotation.support.MessageHandlerMethodFactory;
 
 import static nl.tomkemper.bep3.whutsupp.Whutsupp.*;
 
