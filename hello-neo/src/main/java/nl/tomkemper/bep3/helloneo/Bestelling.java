@@ -1,7 +1,6 @@
 package nl.tomkemper.bep3.helloneo;
 
-import org.springframework.data.neo4j.core.schema.Id;
-import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,8 +12,10 @@ public class Bestelling {
     @Id
     private String id = UUID.randomUUID().toString();
 
-    private long klantId;
+    @Relationship(type = "KOPER", direction = Relationship.Direction.INCOMING)
+    private Klant klant;
     private LocalDate datum = LocalDate.now();
+    @Relationship(type = "ITEM", direction = Relationship.Direction.OUTGOING)
     private List<BesteldArtikel> artikelen = new ArrayList<>();
 
     public List<BesteldArtikel> getArtikelen() {
@@ -25,43 +26,48 @@ public class Bestelling {
         return datum;
     }
 
-    public Bestelling(Klant k){
-        this.klantId = k.getId();
+    public Bestelling(Klant k) {
+        this.klant = k;
     }
 
-    public Bestelling add(int stuks, Artikel artikel){
+    public Bestelling add(int stuks, Artikel artikel) {
         this.getArtikelen().add(new BesteldArtikel(artikel, stuks));
         return this;
     }
 
-    public Bestelling add(Artikel artikel){
+    public Bestelling add(Artikel artikel) {
         this.getArtikelen().add(new BesteldArtikel(artikel, 1));
         return this;
     }
 
-    public long getKlantId() {
-        return klantId;
+    public Klant getKlant() {
+        return klant;
     }
 
     public String getId() {
         return id;
     }
 
+
+    @RelationshipProperties
     public static class BesteldArtikel {
-        private long artikelId;
+        @Id
+        @GeneratedValue
+        private Long id;
+
+        @TargetNode
+        private Artikel artikel;
         private int aantal;
         private double prijs;
-        private String naam;
 
-        public BesteldArtikel(Artikel artikel, int aantal){
+        public BesteldArtikel(Artikel artikel, int aantal) {
             this.aantal = aantal;
-            this.artikelId = artikel.getId();
+            this.artikel = artikel;
             this.prijs = artikel.getAdviesPrijs();
-            this.naam = artikel.getName();
         }
 
-        public long getArtikelId() {
-            return artikelId;
+        public Artikel getArtikel() {
+            return artikel;
         }
 
         public int getAantal() {
