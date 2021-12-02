@@ -10,5 +10,36 @@ services:
       RABBITMQ_NODENAME: bep3-rabbitmq-node
   mongodb:    
     image: mongo
+    restart: always
     ports:
       - "27017:27017"
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8092:8081
+    environment:      
+      ME_CONFIG_MONGODB_URL: mongodb://mongodb:27017/
+  pg:
+    image: postgres
+    restart: always
+    ports: 
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: 1q2w3e!
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - 8091:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: tom@tomkemper.nl
+      PGADMIN_DEFAULT_PASSWORD: 1q2w3e!
+  neo4j:    
+    image: neo4j
+    restart: always
+    ports:
+      - 7474:7474
+      - 7687:7687
+    environment:
+      - NEO4J_AUTH=neo4j/1q2w3e!
