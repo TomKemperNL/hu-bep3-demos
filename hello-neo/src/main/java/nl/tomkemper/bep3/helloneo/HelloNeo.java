@@ -4,6 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.neo4j.core.Neo4jClient;
+import org.springframework.data.neo4j.core.Neo4jTemplate;
 import org.springframework.stereotype.Component;
 
 @SpringBootApplication
@@ -15,16 +16,12 @@ public class HelloNeo implements CommandLineRunner {
 
     }
 
-    private final KlantRepository klanten;
-    private final BestellingRepository bestellingen;
-    private final ArtikelRepository artikelen;
     private final Neo4jClient neoClient;
+    private final Neo4jTemplate neoTemplate;
 
-    public HelloNeo(KlantRepository klanten, BestellingRepository bestellingen, ArtikelRepository artikelen, Neo4jClient neoClient) {
-        this.klanten = klanten;
-        this.bestellingen = bestellingen;
-        this.artikelen = artikelen;
+    public HelloNeo(Neo4jClient neoClient, Neo4jTemplate neoTemplate) {
         this.neoClient = neoClient;
+        this.neoTemplate = neoTemplate;
     }
 
     @Override
@@ -34,8 +31,8 @@ public class HelloNeo implements CommandLineRunner {
         Klant smit = new Klant(121, "Smit");
         Klant staal = new Klant(122, "Staal");
 
-        this.klanten.save(smit);
-        this.klanten.save(staal);
+        this.neoTemplate.save(smit);
+        this.neoTemplate.save(staal);
 
         Artikel postits = new Artikel(121, "post-its", 2.75);
         Artikel pennen = new Artikel(122, "high light pen", 1.50);
@@ -43,12 +40,12 @@ public class HelloNeo implements CommandLineRunner {
         Artikel nietmachine = new Artikel(124, "nietmachine", 4.75);
 
         for (Artikel a : new Artikel[]{postits, pennen, diskettes, nietmachine}) {
-            this.artikelen.save(a);
+            this.neoTemplate.save(a);
         }
 
         Bestelling b = new Bestelling(smit).add(100, postits).add(2, pennen);
 
-        this.bestellingen.save(b);
+        this.neoTemplate.save(b);
 
         //MATCH (k:Klant)-->(b:Bestelling)-[i:ITEM]->(m) RETURN k.name,b.datum,sum(i.aantal * i.prijs)
 
