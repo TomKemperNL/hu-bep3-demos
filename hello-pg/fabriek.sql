@@ -1,11 +1,11 @@
 DROP TABLE IF EXISTS Voorraad; 
 DROP TABLE IF EXISTS BesteldArtikel; 
-DROP TABLE IF EXISTS Bestelling; 
-DROP TABLE IF EXISTS Klant; 
+DROP TABLE IF EXISTS nl.tomkemper.bep3.helloneo.Bestelling;
+DROP TABLE IF EXISTS nl.tomkemper.bep3.helloneo.Klant;
 DROP TABLE IF EXISTS Fabriek; 
-DROP TABLE IF EXISTS Artikel; 
+DROP TABLE IF EXISTS nl.tomkemper.bep3.helloneo.Artikel;
  
-CREATE TABLE Klant( 
+CREATE TABLE nl.tomkemper.bep3.helloneo.Klant(
  klantnr INTEGER NOT NULL, 
  naam    VARCHAR(30) NOT NULL, 
  adres   VARCHAR(30) NOT NULL, 
@@ -23,7 +23,7 @@ CREATE TABLE Fabriek
 ); 
  
  
-Create Table Artikel 
+Create Table nl.tomkemper.bep3.helloneo.Artikel
 ( artnr       INTEGER        NOT NULL 
 , naam        CHAR(30)       NOT NULL 
 , adviesprijs DECIMAL(10, 2) NOT NULL 
@@ -37,16 +37,16 @@ CREATE TABLE Voorraad
   minvrd INTEGER NOT NULL, 
   PRIMARY KEY(fabnr, artnr), 
   FOREIGN KEY(fabnr) REFERENCES Fabriek(fabnr), 
-  FOREIGN KEY(artnr) REFERENCES Artikel(artnr) 
+  FOREIGN KEY(artnr) REFERENCES nl.tomkemper.bep3.helloneo.Artikel(artnr)
 ); 
  
-CREATE TABLE Bestelling 
+CREATE TABLE nl.tomkemper.bep3.helloneo.Bestelling
 ( bestnr  INTEGER NOT NULL, 
   klantnr INTEGER NOT NULL, 
   fabnr   INTEGER NOT NULL, 
   datum   DATE     NOT NULL, 
   PRIMARY KEY(bestnr), 
-  FOREIGN KEY(klantnr) REFERENCES Klant(klantnr), 
+  FOREIGN KEY(klantnr) REFERENCES nl.tomkemper.bep3.helloneo.Klant(klantnr),
   FOREIGN KEY(fabnr) REFERENCES Fabriek(fabnr) 
 ); 
  
@@ -56,22 +56,22 @@ CREATE TABLE BesteldArtikel
   aantal      INTEGER       NOT NULL, 
   bestelprijs DECIMAL(10, 2) NOT NULL, 
   PRIMARY KEY(bestnr, artnr), 
-  FOREIGN KEY(bestnr) REFERENCES Bestelling(bestnr), 
-  FOREIGN KEY(artnr) REFERENCES Artikel(artnr) 
+  FOREIGN KEY(bestnr) REFERENCES nl.tomkemper.bep3.helloneo.Bestelling(bestnr),
+  FOREIGN KEY(artnr) REFERENCES nl.tomkemper.bep3.helloneo.Artikel(artnr)
 ); 
  
  
-INSERT INTO Klant VALUES (121, 'Smit'  , 'Hamburgerstraat 55'   , 'Utrecht'   
+INSERT INTO nl.tomkemper.bep3.helloneo.Klant VALUES (121, 'Smit'  , 'Hamburgerstraat 55'   , 'Utrecht'
 ); 
-INSERT INTO Klant VALUES (122, 'Staal' , 'VerONesestraat 6'     , 
+INSERT INTO nl.tomkemper.bep3.helloneo.Klant VALUES (122, 'Staal' , 'VerONesestraat 6'     ,
 'Amsterdam' ); 
-INSERT INTO Klant VALUES (123, 'Slager', 'Langestraat 3'        , 
+INSERT INTO nl.tomkemper.bep3.helloneo.Klant VALUES (123, 'Slager', 'Langestraat 3'        ,
 'Amersfoort');  
-INSERT INTO Klant VALUES (124, 'Snoek' , 'Neude 13'             , 'Utrecht'   
+INSERT INTO nl.tomkemper.bep3.helloneo.Klant VALUES (124, 'Snoek' , 'Neude 13'             , 'Utrecht'
 ); 
-INSERT INTO Klant VALUES (125, 'Boer'  , 'Prinses Irenelaan 19' , 'Utrecht'   
+INSERT INTO nl.tomkemper.bep3.helloneo.Klant VALUES (125, 'Boer'  , 'Prinses Irenelaan 19' , 'Utrecht'
 ); 
-INSERT INTO Klant VALUES (126, 'Groot' , 'Amsterdamseweg 99'    , 
+INSERT INTO nl.tomkemper.bep3.helloneo.Klant VALUES (126, 'Groot' , 'Amsterdamseweg 99'    ,
 'Amersfoort'); 
  
  
@@ -96,18 +96,18 @@ INSERT INTO Fabriek VALUES (455, 'Office'   , 'Het Spui 12'    ,
 INSERT INTO Fabriek VALUES (456, 'Buhrmann' , 'Taagdreef 56'   , 'Utrecht'   
 ); 
  
-Insert Into Artikel Values (121, 'post-its'        ,  2.75); 
-Insert Into Artikel Values (122, 'high light pen'  ,  1.50); 
-Insert Into Artikel Values (123, 'diskettes 10pk'  ,  3.10); 
-Insert Into Artikel Values (124, 'nietmachine'     ,  4.75); 
-Insert Into Artikel Values (451, 'cd-rw'           ,  0.50); 
-Insert Into Artikel Values (452, 'bic pen'         ,  1.00); 
-Insert Into Artikel Values (453, 'tip-ex'          ,  2.10); 
-Insert Into Artikel Values (454, 'cd-rw 15pk'      ,  6.00); 
-Insert Into Artikel Values (456, 'bureaulamp'      , 10.00); 
-Insert Into Artikel Values (457, 'documenthouder'  , 22.50); 
-Insert Into Artikel Values (458, 'mONitorstandaard', 10.90); 
-Insert Into Artikel Values (459, 'antistofhoes'    ,  8.10); 
+Insert Into nl.tomkemper.bep3.helloneo.Artikel Values (121, 'post-its'        ,  2.75);
+Insert Into nl.tomkemper.bep3.helloneo.Artikel Values (122, 'high light pen'  ,  1.50);
+Insert Into nl.tomkemper.bep3.helloneo.Artikel Values (123, 'diskettes 10pk'  ,  3.10);
+Insert Into nl.tomkemper.bep3.helloneo.Artikel Values (124, 'nietmachine'     ,  4.75);
+Insert Into nl.tomkemper.bep3.helloneo.Artikel Values (451, 'cd-rw'           ,  0.50);
+Insert Into nl.tomkemper.bep3.helloneo.Artikel Values (452, 'bic pen'         ,  1.00);
+Insert Into nl.tomkemper.bep3.helloneo.Artikel Values (453, 'tip-ex'          ,  2.10);
+Insert Into nl.tomkemper.bep3.helloneo.Artikel Values (454, 'cd-rw 15pk'      ,  6.00);
+Insert Into nl.tomkemper.bep3.helloneo.Artikel Values (456, 'bureaulamp'      , 10.00);
+Insert Into nl.tomkemper.bep3.helloneo.Artikel Values (457, 'documenthouder'  , 22.50);
+Insert Into nl.tomkemper.bep3.helloneo.Artikel Values (458, 'mONitorstandaard', 10.90);
+Insert Into nl.tomkemper.bep3.helloneo.Artikel Values (459, 'antistofhoes'    ,  8.10);
  
 INSERT INTO Voorraad VALUES (121, 121, 200, 150); 
 INSERT INTO Voorraad VALUES (121, 122, 300,  75); 
@@ -137,17 +137,17 @@ INSERT INTO Voorraad VALUES (455, 458, 499, 100);
 INSERT INTO Voorraad VALUES (455, 459,   5,  80); 
  
  
-INSERT INTO Bestelling VALUES (121, 121, 124, '2003-04-16'); 
-INSERT INTO Bestelling VALUES (122, 123, 123, '2003-08-25'); 
-INSERT INTO Bestelling VALUES (123, 124, 122, '2003-10-17'); 
-INSERT INTO Bestelling VALUES (124, 122, 121, '2003-05-04'); 
-INSERT INTO Bestelling VALUES (125, 123, 455, '2003-07-19'); 
-INSERT INTO Bestelling VALUES (451, 125, 452, '2003-04-25'); 
-INSERT INTO Bestelling VALUES (452, 126, 451, '2003-08-02'); 
-INSERT INTO Bestelling VALUES (453, 121, 122, '2003-10-17'); 
-INSERT INTO Bestelling VALUES (454, 124, 454, '2003-05-04'); 
-INSERT INTO Bestelling VALUES (455, 126, 455, '2003-07-19'); 
-INSERT INTO Bestelling VALUES (456, 121, 455, '2003-10-17'); 
+INSERT INTO nl.tomkemper.bep3.helloneo.Bestelling VALUES (121, 121, 124, '2003-04-16');
+INSERT INTO nl.tomkemper.bep3.helloneo.Bestelling VALUES (122, 123, 123, '2003-08-25');
+INSERT INTO nl.tomkemper.bep3.helloneo.Bestelling VALUES (123, 124, 122, '2003-10-17');
+INSERT INTO nl.tomkemper.bep3.helloneo.Bestelling VALUES (124, 122, 121, '2003-05-04');
+INSERT INTO nl.tomkemper.bep3.helloneo.Bestelling VALUES (125, 123, 455, '2003-07-19');
+INSERT INTO nl.tomkemper.bep3.helloneo.Bestelling VALUES (451, 125, 452, '2003-04-25');
+INSERT INTO nl.tomkemper.bep3.helloneo.Bestelling VALUES (452, 126, 451, '2003-08-02');
+INSERT INTO nl.tomkemper.bep3.helloneo.Bestelling VALUES (453, 121, 122, '2003-10-17');
+INSERT INTO nl.tomkemper.bep3.helloneo.Bestelling VALUES (454, 124, 454, '2003-05-04');
+INSERT INTO nl.tomkemper.bep3.helloneo.Bestelling VALUES (455, 126, 455, '2003-07-19');
+INSERT INTO nl.tomkemper.bep3.helloneo.Bestelling VALUES (456, 121, 455, '2003-10-17');
  
  
 INSERT INTO BesteldArtikel VALUES (121, 124,  200,  4.50); 
