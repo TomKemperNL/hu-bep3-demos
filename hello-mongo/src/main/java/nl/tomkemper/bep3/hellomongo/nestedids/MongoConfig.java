@@ -21,17 +21,15 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
         System.out.println("Ze worden toegevoegd");
     }
 
-    public static class IdReader implements Converter<Document, PersoonId> {
-        public PersoonId convert(Document document) {
-            return new PersoonId(Long.parseLong(document.get("custom_id").toString()));
+    public static class IdReader implements Converter<Long, PersoonId> {
+        public PersoonId convert(Long document) {
+            return new PersoonId(document);
         }
     }
 
-    public static class IdWriter implements Converter<PersoonId, Document> {
-        public Document convert(PersoonId id) {
-            Document d = new Document();
-            d.put("custom_id", id.getId());
-            return d;
+    public static class IdWriter implements Converter<PersoonId, Long> {
+        public Long convert(PersoonId id) {
+            return id.getId();
         }
     }
 
