@@ -22,6 +22,7 @@
 
     <modules>
         <module>hello-rabbitmq</module>
+        <module>hello-spring-rabbitmq</module>
         <module>hello-springweb</module>
         <module>hello-mongo</module>
         <module>hello-pg</module>
