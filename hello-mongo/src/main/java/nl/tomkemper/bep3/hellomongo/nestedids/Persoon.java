@@ -9,11 +9,11 @@ import java.util.List;
 public class Persoon {
 
     @Id
-    private PersoonId id = new PersoonId(42);
+    private String id;
     private String naam;
     private List<TelefoonNr> nummers = new ArrayList<>();
 
-    private PersoonId besteVriend = new PersoonId(33);
+    private PersoonId besteVriend = new PersoonId("61b1cafa39d84309cd254111"); //een of andere random geldige object id ergens vandaan gejat ;D
 
     protected Persoon(){
 
@@ -30,7 +30,7 @@ public class Persoon {
     }
 
     public PersoonId getId() {
-        return id;
+        return new PersoonId(id);
     }
 
     public String getNaam() {

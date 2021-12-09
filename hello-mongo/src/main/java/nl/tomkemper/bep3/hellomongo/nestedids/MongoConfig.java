@@ -1,5 +1,6 @@
 package nl.tomkemper.bep3.hellomongo.nestedids;
 
+import org.bson.types.ObjectId;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
@@ -21,15 +22,15 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
         System.out.println("Ze worden toegevoegd");
     }
 
-    public static class IdReader implements Converter<Long, PersoonId> {
-        public PersoonId convert(Long document) {
-            return new PersoonId(document);
+    public static class IdReader implements Converter<ObjectId, PersoonId> {
+        public PersoonId convert(ObjectId document) {
+            return new PersoonId(document.toHexString());
         }
     }
 
-    public static class IdWriter implements Converter<PersoonId, Long> {
-        public Long convert(PersoonId id) {
-            return id.getId();
+    public static class IdWriter implements Converter<PersoonId, ObjectId> {
+        public ObjectId convert(PersoonId id) {
+            return new ObjectId(id.getId());
         }
     }
 

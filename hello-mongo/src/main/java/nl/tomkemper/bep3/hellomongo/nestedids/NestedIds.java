@@ -28,8 +28,9 @@ public class NestedIds implements CommandLineRunner {
 
         Persoon p = new Persoon("Sjakie", "031-123-4567");
         template.save(p);
+        System.out.println(p.getId());
 
-        Persoon result = template.findById(new PersoonId(42), Persoon.class);
+        Persoon result = template.findById(p.getId(), Persoon.class);
         System.out.println(result.getNaam());
     }
 }
