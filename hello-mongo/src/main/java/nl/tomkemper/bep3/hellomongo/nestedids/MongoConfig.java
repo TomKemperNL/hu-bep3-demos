@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.bson.Document;
 
 @Configuration
 public class MongoConfig extends AbstractMongoClientConfiguration {
@@ -23,15 +23,15 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
     public static class IdReader implements Converter<Document, PersoonId> {
         public PersoonId convert(Document document) {
-            System.out.println("huh");
-            throw new RuntimeException();
+            return new PersoonId(Long.parseLong(document.get("custom_id").toString()));
         }
     }
 
     public static class IdWriter implements Converter<PersoonId, Document> {
         public Document convert(PersoonId id) {
-            System.out.println("huh");
-            throw new RuntimeException();
+            Document d = new Document();
+            d.put("custom_id", id.getId());
+            return d;
         }
     }
 
