@@ -12,6 +12,9 @@ public class Producer {
     }
 
     public void sendMessage(SomeMessage message){
-        this.template.convertAndSend("demo-queue", message);
+
+        this.template.convertAndSend(
+                "demo-exchange",
+                "demo-both", message);
     }
 }

@@ -14,6 +14,7 @@ public class Runner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
         while(true){
             this.producer.sendMessage(new SomeMessage("Hello RabbitMQ"));
             Thread.sleep(5000);
