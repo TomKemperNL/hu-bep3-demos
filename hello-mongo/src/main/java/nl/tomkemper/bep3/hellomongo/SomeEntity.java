@@ -1,19 +1,22 @@
 package nl.tomkemper.bep3.hellomongo;
 
+import org.springframework.data.annotation.Id;
+
+import java.math.BigInteger;
+import java.util.UUID;
+
 public class SomeEntity {
-    private long id;
+    @Id
+    private UUID id = UUID.randomUUID();
     private String name;
 
     public SomeEntity(String name) {
         this.name = name;
+
     }
 
-    public long getId() {
+    public UUID getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {
