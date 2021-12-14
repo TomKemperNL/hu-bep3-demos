@@ -27,6 +27,7 @@
         <module>hello-mongo</module>
         <module>hello-pg</module>
         <module>hello-neo</module>
+        <module>hello-eventsourcing</module>
         <module>whutsupp</module>
     </modules>
 
