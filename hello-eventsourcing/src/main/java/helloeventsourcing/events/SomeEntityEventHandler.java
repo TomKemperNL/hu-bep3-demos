@@ -1,7 +1,9 @@
 package helloeventsourcing.events;
 
+import helloeventsourcing.SomeEntity;
+
 public interface SomeEntityEventHandler {
-    void apply(ContactDataChanged event);
-    void apply(NameTypoFixed event);
+    SomeEntity apply(ContactDataChanged event);
+    SomeEntity apply(NameTypoFixed event);
     //De created Event is 'anders', want dan is er nog geen object om 'm te accepteren
 }
