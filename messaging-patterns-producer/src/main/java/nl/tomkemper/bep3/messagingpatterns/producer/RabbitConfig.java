@@ -44,16 +44,6 @@ public class RabbitConfig {
 
     @Bean
     public MessageConverter converter() {
-
-        Jackson2JsonMessageConverter converter =  new Jackson2JsonMessageConverter();
-        DefaultJackson2JavaTypeMapper mapper = new DefaultJackson2JavaTypeMapper();
-        converter.setJavaTypeMapper(mapper);
-
-        Map<String, Class<?>> extraMappings = new HashMap<>();
-        extraMappings.put("nl.tomkemper.bep3.messagingpatterns.consumer.requestreply.CounterReply", CounterReply.class);
-
-        mapper.setIdClassMapping(extraMappings);
-
-        return converter;
+        return new Jackson2JsonMessageConverter();
     }
 }
