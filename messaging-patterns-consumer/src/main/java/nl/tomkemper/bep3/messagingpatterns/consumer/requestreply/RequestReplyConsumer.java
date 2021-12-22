@@ -1,5 +1,8 @@
 package nl.tomkemper.bep3.messagingpatterns.consumer.requestreply;
 
+import nl.tomkemper.bep3.messagingpatterns.producer.requestreply.CounterQuery;
+import nl.tomkemper.bep3.messagingpatterns.producer.requestreply.CounterReply;
+import nl.tomkemper.bep3.messagingpatterns.producer.requestreply.IncrementCommand;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
