@@ -1,5 +1,7 @@
 package nl.tomkemper.bep3.messagingpatterns.producer;
 
+import nl.tomkemper.bep3.messagingpatterns.producer.competingconsumers.CompetingConsumerProducer;
+import nl.tomkemper.bep3.messagingpatterns.producer.competingconsumers.ProcessImageCommand;
 import nl.tomkemper.bep3.messagingpatterns.producer.fireforget.SendEmailCommand;
 import nl.tomkemper.bep3.messagingpatterns.producer.pubsub.HappyNewYearEvent;
 import nl.tomkemper.bep3.messagingpatterns.producer.pubsub.PubSubProducer;
@@ -16,14 +18,17 @@ public class DemoRunner implements CommandLineRunner {
     private final FireForgetProducer fireForgetProducer;
     private final RequestReplyProducer requestReplyProducer;
     private final PubSubProducer pubSubProducer;
+    private final CompetingConsumerProducer competingConsumerProducer;
 
     public DemoRunner(
             FireForgetProducer fireForgetProducer,
             RequestReplyProducer requestReplyProducer,
-            PubSubProducer pubSubProducer) {
+            PubSubProducer pubSubProducer,
+            CompetingConsumerProducer competingConsumerProducer) {
         this.fireForgetProducer = fireForgetProducer;
         this.requestReplyProducer = requestReplyProducer;
         this.pubSubProducer = pubSubProducer;
+        this.competingConsumerProducer = competingConsumerProducer;
     }
 
     private void runPubSubDemo() {
@@ -44,6 +49,10 @@ public class DemoRunner implements CommandLineRunner {
         System.out.printf("Counter %s staat nu op %d%n", key, result);
     }
 
+    private void runCompetingConsumersDemo(){
+        this.competingConsumerProducer.sendMessage(ProcessImageCommand.random());
+    }
+
     @Override
     public void run(String... args) throws Exception {
         Scanner scanner = new Scanner(System.in);
@@ -54,6 +63,7 @@ public class DemoRunner implements CommandLineRunner {
                 System.out.println("1: Fire and Forget");
                 System.out.println("2: Request Reply");
                 System.out.println("3: Publisher Subscribe");
+                System.out.println("4: Competing Consumers");
                 switch (scanner.nextInt()) {
                     case 1:
                         runFireForgetDemo();
@@ -63,6 +73,9 @@ public class DemoRunner implements CommandLineRunner {
                         break;
                     case 3:
                         runPubSubDemo();
+                        break;
+                    case 4:
+                        runCompetingConsumersDemo();
                         break;
                 }
             }

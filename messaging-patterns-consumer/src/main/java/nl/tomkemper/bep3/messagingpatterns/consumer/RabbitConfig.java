@@ -50,6 +50,11 @@ public class RabbitConfig {
     }
 
     @Bean
+    public Queue competingExample() {
+        return QueueBuilder.durable("competingconsumers-example").build();
+    }
+
+    @Bean
     public MessageConverter converter() {
         return new Jackson2JsonMessageConverter();
     }
