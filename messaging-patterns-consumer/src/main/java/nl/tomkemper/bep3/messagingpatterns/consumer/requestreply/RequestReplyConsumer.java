@@ -13,6 +13,7 @@ public class RequestReplyConsumer {
 
     @RabbitListener(queues = {"incrementcounter-example"})
     public void increment(IncrementCommand cmd) {
+        System.out.printf("Ik kreeg een increment voor %s%n", cmd.key);
         if (!counters.containsKey(cmd.key)) {
             counters.put(cmd.key, 0);
         }
@@ -22,6 +23,7 @@ public class RequestReplyConsumer {
 
     @RabbitListener(queues = {"querycounter-example"})
     public CounterReply findValue(CounterQuery query) {
+        System.out.printf("Ik kreeg een query voor %s%n", query.key);
         CounterReply reply = new CounterReply();
         reply.key = query.key;
         reply.count = counters.getOrDefault(query.key, 0);
