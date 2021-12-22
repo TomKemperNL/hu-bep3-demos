@@ -38,6 +38,9 @@ public class RabbitConfig {
 
     @Bean
     public MessageConverter converter() {
-        return new Jackson2JsonMessageConverter();
+
+        Jackson2JsonMessageConverter converter =  new Jackson2JsonMessageConverter();
+        converter.setAlwaysConvertToInferredType(true);
+        return converter;
     }
 }
