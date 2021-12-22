@@ -1,4 +1,4 @@
-package nl.tomkemper.bep3.messagingpatterns.consumer.fireforget;
+package nl.tomkemper.bep3.messagingpatterns.consumer;
 
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
@@ -12,6 +12,16 @@ public class RabbitConfig {
     @Bean
     public Queue fireAndForgetQueue() {
         return QueueBuilder.durable("fireforget-example").build();
+    }
+
+    @Bean
+    public Queue requestCounterQueue() {
+        return QueueBuilder.durable("querycounter-example").build();
+    }
+
+    @Bean
+    public Queue incrementCounterQueue() {
+        return QueueBuilder.durable("incrementcounter-example").build();
     }
 
     @Bean

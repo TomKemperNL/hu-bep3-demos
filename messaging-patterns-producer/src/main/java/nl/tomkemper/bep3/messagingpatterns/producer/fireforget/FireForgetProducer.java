@@ -1,4 +1,4 @@
-package nl.tomkemper.bep3.producer.fireforget;
+package nl.tomkemper.bep3.messagingpatterns.producer.fireforget;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;

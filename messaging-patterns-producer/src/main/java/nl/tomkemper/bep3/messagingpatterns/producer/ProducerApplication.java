@@ -1,4 +1,4 @@
-package nl.tomkemper.bep3.producer;
+package nl.tomkemper.bep3.messagingpatterns.producer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
