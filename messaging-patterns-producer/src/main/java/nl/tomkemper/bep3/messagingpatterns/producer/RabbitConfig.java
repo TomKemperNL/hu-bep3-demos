@@ -72,6 +72,12 @@ public class RabbitConfig {
         return QueueBuilder.durable("competingconsumers-example").build();
     }
 
+
+    @Bean
+    public Queue inheritanceExample() {
+        return QueueBuilder.durable("inheritance-example").build();
+    }
+
     @Bean
     public MessageConverter converter() {
         return new Jackson2JsonMessageConverter();
