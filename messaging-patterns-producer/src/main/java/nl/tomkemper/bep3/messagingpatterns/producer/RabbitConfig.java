@@ -1,8 +1,7 @@
 package nl.tomkemper.bep3.messagingpatterns.producer;
 
 import nl.tomkemper.bep3.messagingpatterns.producer.requestreply.CounterReply;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.QueueBuilder;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.support.converter.AbstractJavaTypeMapper;
 import org.springframework.amqp.support.converter.DefaultJackson2JavaTypeMapper;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -40,6 +39,32 @@ public class RabbitConfig {
     @Bean
     public Queue incrementCounterQueue() {
         return QueueBuilder.durable("incrementcounter-example").build();
+    }
+
+
+    @Bean
+    public DirectExchange pubsubExchange(){
+        return ExchangeBuilder.directExchange("pubsubdemo").build();
+    }
+
+    @Bean
+    public Queue pubsubQueue1() {
+        return QueueBuilder.durable("happynewyear1-example").build();
+    }
+
+    @Bean
+    public Queue pubsubQueue2() {
+        return QueueBuilder.durable("happynewyear2-example").build();
+    }
+
+    @Bean
+    public Binding bindQueue1() {
+        return BindingBuilder.bind(pubsubQueue1()).to(pubsubExchange()).with("happy-new-year");
+    }
+
+    @Bean
+    public Binding bindQueue2() {
+        return BindingBuilder.bind(pubsubQueue2()).to(pubsubExchange()).with("happy-new-year");
     }
 
     @Bean

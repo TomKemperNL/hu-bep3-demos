@@ -1,6 +1,8 @@
 package nl.tomkemper.bep3.messagingpatterns.producer;
 
 import nl.tomkemper.bep3.messagingpatterns.producer.fireforget.SendEmailCommand;
+import nl.tomkemper.bep3.messagingpatterns.producer.pubsub.HappyNewYearEvent;
+import nl.tomkemper.bep3.messagingpatterns.producer.pubsub.PubSubProducer;
 import nl.tomkemper.bep3.messagingpatterns.producer.requestreply.RequestReplyProducer;
 import nl.tomkemper.bep3.messagingpatterns.producer.fireforget.FireForgetProducer;
 import org.springframework.boot.CommandLineRunner;
@@ -13,10 +15,20 @@ import java.util.UUID;
 public class DemoRunner implements CommandLineRunner {
     private final FireForgetProducer fireForgetProducer;
     private final RequestReplyProducer requestReplyProducer;
+    private final PubSubProducer pubSubProducer;
 
-    public DemoRunner(FireForgetProducer fireForgetProducer, RequestReplyProducer requestReplyProducer) {
+    public DemoRunner(
+            FireForgetProducer fireForgetProducer,
+            RequestReplyProducer requestReplyProducer,
+            PubSubProducer pubSubProducer) {
         this.fireForgetProducer = fireForgetProducer;
         this.requestReplyProducer = requestReplyProducer;
+        this.pubSubProducer = pubSubProducer;
+    }
+
+    private void runPubSubDemo() {
+        HappyNewYearEvent message = HappyNewYearEvent.of(2022);
+        this.pubSubProducer.sendMessage(message);
     }
 
     private void runFireForgetDemo() {
@@ -41,12 +53,16 @@ public class DemoRunner implements CommandLineRunner {
                 System.out.println("Welke gaan we doen? (daarna even op enter drukken)");
                 System.out.println("1: Fire and Forget");
                 System.out.println("2: Request Reply");
+                System.out.println("3: Publisher Subscribe");
                 switch (scanner.nextInt()) {
                     case 1:
                         runFireForgetDemo();
                         break;
                     case 2:
                         runRequestReplyDemo();
+                        break;
+                    case 3:
+                        runPubSubDemo();
                         break;
                 }
             }
