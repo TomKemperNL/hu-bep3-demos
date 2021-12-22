@@ -1,11 +1,17 @@
 package nl.tomkemper.bep3.messagingpatterns.producer;
 
+import nl.tomkemper.bep3.messagingpatterns.producer.requestreply.CounterReply;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
+import org.springframework.amqp.support.converter.AbstractJavaTypeMapper;
+import org.springframework.amqp.support.converter.DefaultJackson2JavaTypeMapper;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class RabbitConfig {
@@ -40,7 +46,14 @@ public class RabbitConfig {
     public MessageConverter converter() {
 
         Jackson2JsonMessageConverter converter =  new Jackson2JsonMessageConverter();
-        converter.setAlwaysConvertToInferredType(true);
+        DefaultJackson2JavaTypeMapper mapper = new DefaultJackson2JavaTypeMapper();
+        converter.setJavaTypeMapper(mapper);
+
+        Map<String, Class<?>> extraMappings = new HashMap<>();
+        extraMappings.put("nl.tomkemper.bep3.messagingpatterns.consumer.requestreply.CounterReply", CounterReply.class);
+
+        mapper.setIdClassMapping(extraMappings);
+
         return converter;
     }
 }
